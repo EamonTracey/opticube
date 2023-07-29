@@ -3,6 +3,10 @@
 
 #include "cube.h"
 
+const uint8_t edge_flip[] = { 1, 0 };
+const uint8_t corner_twist_cw[] = { 1, 2, 0 };
+const uint8_t corner_twist_ccw[] = { 2, 0, 1 };
+
 struct cube *init_cube_solved() {
     struct cube *cube = (struct cube *)malloc(sizeof(struct cube));
     *cube = SOLVED_CUBE;
@@ -115,10 +119,10 @@ void turn_right_cw(struct cube *cube) {
     cube->corners[4] = cube->corners[5];
     cube->corners[5] = cube->corners[1];
     cube->corners[1] = stored_corner;
-    cube->corners[0].orientation = (cube->corners[0].orientation + 2) % 3;
-    cube->corners[4].orientation = (cube->corners[4].orientation + 1) % 3;
-    cube->corners[5].orientation = (cube->corners[5].orientation + 2) % 3;
-    cube->corners[1].orientation = (cube->corners[1].orientation + 1) % 3;
+    cube->corners[0].orientation = corner_twist_ccw[cube->corners[0].orientation];
+    cube->corners[4].orientation = corner_twist_cw[cube->corners[4].orientation];
+    cube->corners[5].orientation = corner_twist_ccw[cube->corners[5].orientation];
+    cube->corners[1].orientation = corner_twist_cw[cube->corners[1].orientation];
 }
 
 void turn_right_half(struct cube *cube) {
@@ -149,10 +153,10 @@ void turn_right_ccw(struct cube *cube) {
     cube->corners[1] = cube->corners[5];
     cube->corners[5] = cube->corners[4];
     cube->corners[4] = stored_corner;
-    cube->corners[0].orientation = (cube->corners[0].orientation + 2) % 3;
-    cube->corners[1].orientation = (cube->corners[1].orientation + 1) % 3;
-    cube->corners[5].orientation = (cube->corners[5].orientation + 2) % 3;
-    cube->corners[4].orientation = (cube->corners[4].orientation + 1) % 3;
+    cube->corners[0].orientation = corner_twist_ccw[cube->corners[0].orientation];
+    cube->corners[1].orientation = corner_twist_cw[cube->corners[1].orientation];
+    cube->corners[5].orientation = corner_twist_ccw[cube->corners[5].orientation];
+    cube->corners[4].orientation = corner_twist_cw[cube->corners[4].orientation];
 }
 
 void turn_left_cw(struct cube *cube) {
@@ -167,10 +171,10 @@ void turn_left_cw(struct cube *cube) {
     cube->corners[3] = cube->corners[7];
     cube->corners[7] = cube->corners[6];
     cube->corners[6] = stored_corner;
-    cube->corners[2].orientation = (cube->corners[2].orientation + 1) % 3;
-    cube->corners[3].orientation = (cube->corners[3].orientation + 2) % 3;
-    cube->corners[7].orientation = (cube->corners[7].orientation + 1) % 3;
-    cube->corners[6].orientation = (cube->corners[6].orientation + 2) % 3;
+    cube->corners[2].orientation = corner_twist_cw[cube->corners[2].orientation];
+    cube->corners[3].orientation = corner_twist_ccw[cube->corners[3].orientation];
+    cube->corners[7].orientation = corner_twist_cw[cube->corners[7].orientation];
+    cube->corners[6].orientation = corner_twist_ccw[cube->corners[6].orientation];
 }
 
 void turn_left_half(struct cube *cube) {
@@ -201,10 +205,10 @@ void turn_left_ccw(struct cube *cube) {
     cube->corners[6] = cube->corners[7];
     cube->corners[7] = cube->corners[3];
     cube->corners[3] = stored_corner;
-    cube->corners[2].orientation = (cube->corners[2].orientation + 1) % 3;
-    cube->corners[6].orientation = (cube->corners[6].orientation + 2) % 3;
-    cube->corners[7].orientation = (cube->corners[7].orientation + 1) % 3;
-    cube->corners[3].orientation = (cube->corners[3].orientation + 2) % 3;
+    cube->corners[2].orientation = corner_twist_cw[cube->corners[2].orientation];
+    cube->corners[6].orientation = corner_twist_ccw[cube->corners[6].orientation];
+    cube->corners[7].orientation = corner_twist_cw[cube->corners[7].orientation];
+    cube->corners[3].orientation = corner_twist_ccw[cube->corners[3].orientation];
 }
 
 void turn_front_cw(struct cube *cube) {
@@ -213,20 +217,20 @@ void turn_front_cw(struct cube *cube) {
     cube->edges[10] = cube->edges[6];
     cube->edges[6] = cube->edges[8];
     cube->edges[8] = stored_edge;
-    cube->edges[2].orientation = (cube->edges[2].orientation + 1) % 2;
-    cube->edges[10].orientation = (cube->edges[10].orientation + 1) % 2;
-    cube->edges[6].orientation = (cube->edges[6].orientation + 1) % 2;
-    cube->edges[8].orientation = (cube->edges[8].orientation + 1) % 2;
+    cube->edges[2].orientation = edge_flip[cube->edges[2].orientation];
+    cube->edges[10].orientation = edge_flip[cube->edges[10].orientation];
+    cube->edges[6].orientation = edge_flip[cube->edges[6].orientation];
+    cube->edges[8].orientation = edge_flip[cube->edges[8].orientation];
 
     struct corner stored_corner = cube->corners[0];
     cube->corners[0] = cube->corners[2];
     cube->corners[2] = cube->corners[6];
     cube->corners[6] = cube->corners[4];
     cube->corners[4] = stored_corner;
-    cube->corners[0].orientation = (cube->corners[0].orientation + 1) % 3;
-    cube->corners[2].orientation = (cube->corners[2].orientation + 2) % 3;
-    cube->corners[6].orientation = (cube->corners[6].orientation + 1) % 3;
-    cube->corners[4].orientation = (cube->corners[4].orientation + 2) % 3;
+    cube->corners[0].orientation = corner_twist_cw[cube->corners[0].orientation];
+    cube->corners[2].orientation = corner_twist_ccw[cube->corners[2].orientation];
+    cube->corners[6].orientation = corner_twist_cw[cube->corners[6].orientation];
+    cube->corners[4].orientation = corner_twist_ccw[cube->corners[4].orientation];
 }
 
 void turn_front_half(struct cube *cube) {
@@ -251,20 +255,20 @@ void turn_front_ccw(struct cube *cube) {
     cube->edges[8] = cube->edges[6];
     cube->edges[6] = cube->edges[10];
     cube->edges[10] = stored_edge;
-    cube->edges[2].orientation = (cube->edges[2].orientation + 1) % 2;
-    cube->edges[8].orientation = (cube->edges[8].orientation + 1) % 2;
-    cube->edges[6].orientation = (cube->edges[6].orientation + 1) % 2;
-    cube->edges[10].orientation = (cube->edges[10].orientation + 1) % 2;
+    cube->edges[2].orientation = edge_flip[cube->edges[2].orientation];
+    cube->edges[8].orientation = edge_flip[cube->edges[8].orientation];
+    cube->edges[6].orientation = edge_flip[cube->edges[6].orientation];
+    cube->edges[10].orientation = edge_flip[cube->edges[10].orientation];
 
     struct corner stored_corner = cube->corners[0];
     cube->corners[0] = cube->corners[4];
     cube->corners[4] = cube->corners[6];
     cube->corners[6] = cube->corners[2];
     cube->corners[2] = stored_corner;
-    cube->corners[0].orientation = (cube->corners[0].orientation + 1) % 3;
-    cube->corners[4].orientation = (cube->corners[4].orientation + 2) % 3;
-    cube->corners[6].orientation = (cube->corners[6].orientation + 1) % 3;
-    cube->corners[2].orientation = (cube->corners[2].orientation + 2) % 3;
+    cube->corners[0].orientation = corner_twist_cw[cube->corners[0].orientation];
+    cube->corners[4].orientation = corner_twist_ccw[cube->corners[4].orientation];
+    cube->corners[6].orientation = corner_twist_cw[cube->corners[6].orientation];
+    cube->corners[2].orientation = corner_twist_ccw[cube->corners[2].orientation];
 }
 
 void turn_back_cw(struct cube *cube) {
@@ -273,20 +277,20 @@ void turn_back_cw(struct cube *cube) {
     cube->edges[9] = cube->edges[7];
     cube->edges[7] = cube->edges[11];
     cube->edges[11] = stored_edge;
-    cube->edges[3].orientation = (cube->edges[3].orientation + 1) % 2;
-    cube->edges[9].orientation = (cube->edges[9].orientation + 1) % 2;
-    cube->edges[7].orientation = (cube->edges[7].orientation + 1) % 2;
-    cube->edges[11].orientation = (cube->edges[11].orientation + 1) % 2;
+    cube->edges[3].orientation = edge_flip[cube->edges[3].orientation];
+    cube->edges[9].orientation = edge_flip[cube->edges[9].orientation];
+    cube->edges[7].orientation = edge_flip[cube->edges[7].orientation];
+    cube->edges[11].orientation = edge_flip[cube->edges[11].orientation];
 
     struct corner stored_corner = cube->corners[1];
     cube->corners[1] = cube->corners[5];
     cube->corners[5] = cube->corners[7];
     cube->corners[7] = cube->corners[3];
     cube->corners[3] = stored_corner;
-    cube->corners[1].orientation = (cube->corners[1].orientation + 2) % 3;
-    cube->corners[5].orientation = (cube->corners[5].orientation + 1) % 3;
-    cube->corners[7].orientation = (cube->corners[7].orientation + 2) % 3;
-    cube->corners[3].orientation = (cube->corners[3].orientation + 1) % 3;
+    cube->corners[1].orientation = corner_twist_ccw[cube->corners[1].orientation];
+    cube->corners[5].orientation = corner_twist_cw[cube->corners[5].orientation];
+    cube->corners[7].orientation = corner_twist_ccw[cube->corners[7].orientation];
+    cube->corners[3].orientation = corner_twist_cw[cube->corners[3].orientation];
 }
 
 void turn_back_half(struct cube *cube) {
@@ -311,18 +315,18 @@ void turn_back_ccw(struct cube *cube) {
     cube->edges[11] = cube->edges[7];
     cube->edges[7] = cube->edges[9];
     cube->edges[9] = stored_edge;
-    cube->edges[3].orientation = (cube->edges[3].orientation + 1) % 2;
-    cube->edges[11].orientation = (cube->edges[11].orientation + 1) % 2;
-    cube->edges[7].orientation = (cube->edges[7].orientation + 1) % 2;
-    cube->edges[9].orientation = (cube->edges[9].orientation + 1) % 2;
+    cube->edges[3].orientation = edge_flip[cube->edges[3].orientation];
+    cube->edges[11].orientation = edge_flip[cube->edges[11].orientation];
+    cube->edges[7].orientation = edge_flip[cube->edges[7].orientation];
+    cube->edges[9].orientation = edge_flip[cube->edges[9].orientation];
 
     struct corner stored_corner = cube->corners[1];
     cube->corners[1] = cube->corners[3];
     cube->corners[3] = cube->corners[7];
     cube->corners[7] = cube->corners[5];
     cube->corners[5] = stored_corner;
-    cube->corners[1].orientation = (cube->corners[1].orientation + 2) % 3;
-    cube->corners[3].orientation = (cube->corners[3].orientation + 1) % 3;
-    cube->corners[7].orientation = (cube->corners[7].orientation + 2) % 3;
-    cube->corners[5].orientation = (cube->corners[5].orientation + 1) % 3;
+    cube->corners[1].orientation = corner_twist_ccw[cube->corners[1].orientation];
+    cube->corners[3].orientation = corner_twist_cw[cube->corners[3].orientation];
+    cube->corners[7].orientation = corner_twist_ccw[cube->corners[7].orientation];
+    cube->corners[5].orientation = corner_twist_cw[cube->corners[5].orientation];
 }
