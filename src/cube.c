@@ -30,6 +30,13 @@ void turn_up_cw(struct cube *cube) {
 }
 
 void turn_up_half(struct cube *cube) {
+    struct edge stored_edge = cube->edges[0];
+    cube->edges[0] = cube->edges[1];
+    cube->edges[1] = stored_edge;
+    stored_edge = cube->edges[2];
+    cube->edges[2] = cube->edges[3];
+    cube->edges[3] = stored_edge;
+
     struct corner stored_corner = cube->corners[0];
     cube->corners[0] = cube->corners[3];
     cube->corners[3] = stored_corner;
@@ -67,6 +74,13 @@ void turn_down_cw(struct cube *cube) {
 }
 
 void turn_down_half(struct cube *cube) {
+    struct edge stored_edge = cube->edges[4];
+    cube->edges[4] = cube->edges[5];
+    cube->edges[5] = stored_edge;
+    stored_edge = cube->edges[6];
+    cube->edges[6] = cube->edges[7];
+    cube->edges[7] = stored_edge;
+
     struct corner stored_corner = cube->corners[4];
     cube->corners[4] = cube->corners[7];
     cube->corners[7] = stored_corner;
@@ -108,6 +122,13 @@ void turn_right_cw(struct cube *cube) {
 }
 
 void turn_right_half(struct cube *cube) {
+    struct edge stored_edge = cube->edges[0];
+    cube->edges[0] = cube->edges[4];
+    cube->edges[4] = stored_edge;
+    stored_edge = cube->edges[8];
+    cube->edges[8] = cube->edges[9];
+    cube->edges[9] = stored_edge;
+
     struct corner stored_corner = cube->corners[0];
     cube->corners[0] = cube->corners[5];
     cube->corners[5] = stored_corner;
@@ -153,6 +174,13 @@ void turn_left_cw(struct cube *cube) {
 }
 
 void turn_left_half(struct cube *cube) {
+    struct edge stored_edge = cube->edges[1];
+    cube->edges[1] = cube->edges[5];
+    cube->edges[5] = stored_edge;
+    stored_edge = cube->edges[10];
+    cube->edges[10] = cube->edges[11];
+    cube->edges[11] = stored_edge;
+
     struct corner stored_corner = cube->corners[2];
     cube->corners[2] = cube->corners[7];
     cube->corners[7] = stored_corner;
@@ -202,6 +230,13 @@ void turn_front_cw(struct cube *cube) {
 }
 
 void turn_front_half(struct cube *cube) {
+    struct edge stored_edge = cube->edges[2];
+    cube->edges[2] = cube->edges[6];
+    cube->edges[6] = stored_edge;
+    stored_edge = cube->edges[8];
+    cube->edges[8] = cube->edges[10];
+    cube->edges[10] = stored_edge;
+
     struct corner stored_corner = cube->corners[0];
     cube->corners[0] = cube->corners[6];
     cube->corners[6] = stored_corner;
@@ -255,6 +290,13 @@ void turn_back_cw(struct cube *cube) {
 }
 
 void turn_back_half(struct cube *cube) {
+    struct edge stored_edge = cube->edges[3];
+    cube->edges[3] = cube->edges[7];
+    cube->edges[7] = stored_edge;
+    stored_edge = cube->edges[9];
+    cube->edges[9] = cube->edges[11];
+    cube->edges[11] = stored_edge;
+
     struct corner stored_corner = cube->corners[1];
     cube->corners[1] = cube->corners[7];
     cube->corners[7] = stored_corner;
