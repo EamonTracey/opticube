@@ -161,10 +161,10 @@ void turn_front_cw(struct cube *cube) {
     cube->edges[10] = cube->edges[6];
     cube->edges[6] = cube->edges[8];
     cube->edges[8] = stored_edge;
-    cube->edges[2].orientation = (cube->edges[2].orientation + 1) % 2
-    cube->edges[10].orientation = (cube->edges[10].orientation + 1) % 2
-    cube->edges[6].orientation = (cube->edges[6].orientation + 1) % 2
-    cube->edges[8].orientation = (cube->edges[8].orientation + 1) % 2
+    cube->edges[2].orientation = (cube->edges[2].orientation + 1) % 2;
+    cube->edges[10].orientation = (cube->edges[10].orientation + 1) % 2;
+    cube->edges[6].orientation = (cube->edges[6].orientation + 1) % 2;
+    cube->edges[8].orientation = (cube->edges[8].orientation + 1) % 2;
 
     struct corner stored_corner = cube->corners[0];
     cube->corners[0] = cube->corners[2];
@@ -204,10 +204,10 @@ void turn_back_cw(struct cube *cube) {
     cube->edges[9] = cube->edges[7];
     cube->edges[7] = cube->edges[11];
     cube->edges[11] = stored_edge;
-    cube->edges[3].orientation = (cube->edges[3].orientation + 1) % 2
-    cube->edges[9].orientation = (cube->edges[9].orientation + 1) % 2
-    cube->edges[7].orientation = (cube->edges[7].orientation + 1) % 2
-    cube->edges[11].orientation = (cube->edges[11].orientation + 1) % 2
+    cube->edges[3].orientation = (cube->edges[3].orientation + 1) % 2;
+    cube->edges[9].orientation = (cube->edges[9].orientation + 1) % 2;
+    cube->edges[7].orientation = (cube->edges[7].orientation + 1) % 2;
+    cube->edges[11].orientation = (cube->edges[11].orientation + 1) % 2;
 
     struct corner stored_corner = cube->corners[1];
     cube->corners[1] = cube->corners[5];
