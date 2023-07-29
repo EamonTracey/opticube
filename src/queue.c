@@ -2,20 +2,20 @@
 
 #include "queue.h"
 
-struct queue *init_queue() {
-    struct queue *queue = (struct queue *)malloc(sizeof(struct queue));
-    queue->head = NULL;
-    queue->tail = NULL;
-
-    return queue;
-}
-
 struct node *init_node(struct value value) {
     struct node *node = (struct node *)malloc(sizeof(struct node));
     node->value = value;
     node->next = NULL;
 
     return node;
+}
+
+struct queue *init_queue() {
+    struct queue *queue = (struct queue *)malloc(sizeof(struct queue));
+    queue->head = NULL;
+    queue->tail = NULL;
+
+    return queue;
 }
 
 void enqueue(struct queue *queue, struct value value) {

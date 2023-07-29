@@ -1,12 +1,14 @@
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "cube.h"
-#include "state.h"
 #include "queue.h"
+#include "state.h"
+#include "table.h"
 
-int main() {
+uint8_t *generate_korf_corners_table() {
     struct cube *cube_solved = init_cube_solved();
     struct queue *queue = init_queue();
     struct value value = { cube_solved, 0, 255, 0 };
@@ -14,7 +16,6 @@ int main() {
     uint8_t *depth_table = (uint8_t *)malloc(88179840 * sizeof(uint8_t));
     memset(depth_table, 255, 88179840 * sizeof(uint8_t));
 
-    int count = 0;
     enqueue(queue, value);
     while (queue->head != NULL) {
         struct value value = dequeue(queue);
@@ -24,10 +25,6 @@ int main() {
             continue;
         }
         depth_table[value.state] = value.depth;
-        count += 1;
-
-        if (count % 881798 == 0)
-            printf("count: %d (%d)\n", count, value.depth);
 
         struct cube *adj_cube;
         uint32_t adj_state;
@@ -232,7 +229,17 @@ int main() {
     
     free(queue);
 
-    printf("final count: %d\n", count);
+    return depth_table;
+}
 
-    return 0;
+void write_korf_table(char *filename, uint8_t *table, uint32_t size) {
+    FILE *fp = fopen(filename, "w");
+
+    uint8_t buffer;
+    for (uint32_t i = 0; i < size; i += 2) {
+        buffer = (table[i] << 4) + table[i + 1];
+        fwrite(&buffer, sizeof(uint8_t), 1, fp);
+    }
+
+    fclose(fp);
 }
