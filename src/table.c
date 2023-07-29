@@ -226,7 +226,7 @@ uint8_t *generate_korf_corners_table() {
 
         free(value.cube);
     }
-    
+
     free(queue);
 
     return depth_table;
