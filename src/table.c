@@ -128,7 +128,7 @@ uint8_t *generate_korf_corners_table() {
             }
         }
 
-        if (value.last > 9 || value.last < 11) {
+        if (value.last < 9 || value.last > 11) {
             adj_cube = init_cube_copy(value.cube);
             turn_left_cw(adj_cube);
             adj_state = corners_state(adj_cube);
