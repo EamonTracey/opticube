@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-uint8_t *generate_korf_corners_table();
-void write_korf_table(char *, uint8_t *, uint32_t);
+uint8_t *generate_depth_table(uint32_t (*)(struct cube *), uint32_t);
+void write_depth_table(char *, uint8_t *, uint32_t);
 
 #endif
