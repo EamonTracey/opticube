@@ -157,7 +157,6 @@ uint32_t first_six_edges_state(struct cube *cube) {
     for (int i = 0; i < 6; ++i) {
         uint8_t cubelet = first_six_cubelets[i];
         visited |= 2048 >> cubelet;
-
         permutation += (cubelet - bit_count[(visited >> (12 - cubelet)) & 4095]) * edge_p6_radix[i];
     }
 
@@ -182,7 +181,6 @@ uint32_t second_six_edges_state(struct cube *cube) {
     for (int i = 0; i < 6; ++i) {
         uint8_t cubelet = second_six_cubelets[i];
         visited |= 2048 >> cubelet;
-
         permutation += (cubelet - bit_count[(visited >> (12 - cubelet)) & 4095]) * edge_p6_radix[i];
     }
 
@@ -197,7 +195,6 @@ uint32_t corners_state(struct cube *cube) {
     for (int i = 0; i < 7; ++i) {
         uint8_t cubelet = cube->corners[i].cubelet;
         visited |= 128 >> cubelet;
-
         orientation += cube->corners[i].orientation * corner_o_radix[i];
         permutation += (cubelet - bit_count[(uint8_t)(visited >> (8 - cubelet))]) * corner_p8_radix[i];
     }
