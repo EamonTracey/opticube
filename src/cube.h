@@ -26,28 +26,30 @@ static const struct cube SOLVED_CUBE = (struct cube){
 struct cube *init_cube_solved();
 struct cube *init_cube_copy(struct cube *);
 
-void turn_up_cw(struct cube *cube);
-void turn_up_half(struct cube *cube);
-void turn_up_ccw(struct cube *cube);
+void turn(struct cube *, uint8_t);
 
-void turn_down_cw(struct cube *cube);
-void turn_down_half(struct cube *cube);
-void turn_down_ccw(struct cube *cube);
+void turn_up_cw(struct cube *);
+void turn_up_half(struct cube *);
+void turn_up_ccw(struct cube *);
 
-void turn_right_cw(struct cube *cube);
-void turn_right_half(struct cube *cube);
-void turn_right_ccw(struct cube *cube);
+void turn_down_cw(struct cube *);
+void turn_down_half(struct cube *);
+void turn_down_ccw(struct cube *);
 
-void turn_left_cw(struct cube *cube);
-void turn_left_half(struct cube *cube);
-void turn_left_ccw(struct cube *cube);
+void turn_right_cw(struct cube *);
+void turn_right_half(struct cube *);
+void turn_right_ccw(struct cube *);
 
-void turn_front_cw(struct cube *cube);
-void turn_front_half(struct cube *cube);
-void turn_front_ccw(struct cube *cube);
+void turn_left_cw(struct cube *);
+void turn_left_half(struct cube *);
+void turn_left_ccw(struct cube *);
 
-void turn_back_cw(struct cube *cube);
-void turn_back_half(struct cube *cube);
-void turn_back_ccw(struct cube *cube);
+void turn_front_cw(struct cube *);
+void turn_front_half(struct cube *);
+void turn_front_ccw(struct cube *);
+
+void turn_back_cw(struct cube *);
+void turn_back_half(struct cube *);
+void turn_back_ccw(struct cube *);
 
 #endif

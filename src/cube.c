@@ -3,6 +3,15 @@
 
 #include "cube.h"
 
+void (*turns[])(struct cube *) = {
+    turn_up_cw, turn_up_half, turn_up_ccw,
+    turn_down_cw, turn_down_half, turn_down_ccw,
+    turn_right_cw, turn_right_half, turn_right_ccw,
+    turn_left_cw, turn_left_half, turn_left_ccw,
+    turn_front_cw, turn_front_half, turn_front_ccw,
+    turn_back_cw, turn_back_half, turn_back_ccw,
+};
+
 const uint8_t edge_flip[] = { 1, 0 };
 const uint8_t corner_twist_cw[] = { 1, 2, 0 };
 const uint8_t corner_twist_ccw[] = { 2, 0, 1 };
@@ -17,6 +26,10 @@ struct cube *init_cube_copy(struct cube *cube) {
     struct cube *copy = (struct cube *)malloc(sizeof(struct cube));
     memcpy(copy, cube, sizeof(struct cube));
     return copy;
+}
+
+void turn(struct cube *cube, uint8_t turn) {
+    turns[turn](cube);
 }
 
 void turn_up_cw(struct cube *cube) {
