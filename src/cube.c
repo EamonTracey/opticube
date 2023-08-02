@@ -28,6 +28,12 @@ struct cube *init_cube_copy(struct cube *cube) {
     return copy;
 }
 
+uint8_t cubes_equal(struct cube cube1, struct cube cube2) {
+    return 
+       memcmp(cube1.edges, cube2.edges, sizeof(struct edge[12])) == 0 &&
+       memcmp(cube1.corners, cube2.corners, sizeof(struct corner[8])) == 0;
+}
+
 void turn(struct cube *cube, uint8_t turn) {
     turns[turn](cube);
 }
