@@ -3,26 +3,26 @@
 
 #include <stdint.h>
 
-struct value {
+struct queue_value {
     struct cube *cube;
     uint32_t state;
     uint8_t last;
     uint8_t depth;
 };
 
-struct node {
-    struct value value;
-    struct node *next;
+struct queue_node {
+    struct queue_value value;
+    struct queue_node *next;
 };
 
 struct queue {
-    struct node *head;
-    struct node *tail;
+    struct queue_node *head;
+    struct queue_node *tail;
 };
 
-struct node *init_node(struct value);
+struct queue_node *init_node(struct queue_value);
 struct queue *init_queue();
-void enqueue(struct queue *, struct value);
-struct value dequeue(struct queue *);
+void enqueue(struct queue *, struct queue_value);
+struct queue_value dequeue(struct queue *);
 
 #endif

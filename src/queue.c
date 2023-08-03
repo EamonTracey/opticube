@@ -2,8 +2,8 @@
 
 #include "queue.h"
 
-struct node *init_node(struct value value) {
-    struct node *node = (struct node *)malloc(sizeof(struct node));
+struct queue_node *init_node(struct queue_value value) {
+    struct queue_node *node = (struct queue_node *)malloc(sizeof(struct queue_node));
     node->value = value;
     node->next = NULL;
 
@@ -18,8 +18,8 @@ struct queue *init_queue() {
     return queue;
 }
 
-void enqueue(struct queue *queue, struct value value) {
-    struct node *node = init_node(value);
+void enqueue(struct queue *queue, struct queue_value value) {
+    struct queue_node *node = init_node(value);
 
     if (queue->tail == NULL) {
         queue->head = node;
@@ -30,9 +30,9 @@ void enqueue(struct queue *queue, struct value value) {
     }
 }
 
-struct value dequeue(struct queue *queue) {
-    struct value value = queue->head->value;
-    struct node *new_head = queue->head->next;
+struct queue_value dequeue(struct queue *queue) {
+    struct queue_value value = queue->head->value;
+    struct queue_node *new_head = queue->head->next;
 
     free(queue->head); 
 
