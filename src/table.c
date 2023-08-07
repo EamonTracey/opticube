@@ -64,14 +64,18 @@ void write_depth_table(char *filename, uint8_t *table, uint32_t size) {
     fclose(fp);
 }
 
-void load_depth_table(char *filename, uint32_t size) {
+uint8_t *read_depth_table(char *filename, uint32_t size) {
     FILE *fp = fopen(filename, "r");
 
     uint8_t *table = malloc(size * sizeof(uint8_t));
     uint8_t buffer;
-    for (uint32_t i = 0; i < size; ++i) {
+    for (uint32_t i = 0; i < size / 2; ++i) {
         fread(&buffer, sizeof(uint8_t), 1, fp);
         table[i * 2] = buffer >> 4;
         table[i * 2 + 1] = buffer & 15;
     }
+
+    fclose(fp);
+
+    return table;
 }

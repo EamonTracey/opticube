@@ -10,6 +10,7 @@ struct stack_node {
     uint8_t depth;
 };
 
+uint8_t heuristic(struct cube *);
 void solve(struct cube *, int *);
 
 #endif
