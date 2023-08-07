@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -41,41 +40,24 @@ uint8_t heuristic(struct cube *cube) {
 void solve(struct cube *cube, int *n_turns) {
     if (!TABLES_LOADED)
         load_depth_tables();
-    fprintf(stdout, "tables loaded ... solving");
 
     struct stack_node stack[360];
-    struct stack_node *stack_pointer = stack;
-
-    uint32_t traversed = 0;
-    uint32_t pruned = 0;
-    uint32_t searched = 0;
+    uint8_t stack_index = 0;
 
     for (int i = 0; i <= GODS_NUMBER; ++i) {
-        fprintf(stdout, "searching depth %d\n", i);
-
         struct cube *start = init_cube_copy(cube);
-        *(stack_pointer++) = (struct stack_node){ start, NULL, 255, 0 };
-        while (stack != stack_pointer) {
-            struct stack_node node = *(--stack_pointer);
-            ++traversed;
+        stack[stack_index++] = (struct stack_node){ start, NULL, 255, 0 };
+        while (stack_pointer != 0) {
+            struct stack_node node = stack[--stack_index];
 
             if (node.depth + heuristic(node.cube) > i) {
                 free(node.cube);
-                ++pruned;
                 continue;
             }
             
-            ++searched;
-
             if (node.depth == i) {
                 if (cubes_equal(*node.cube, SOLVED_CUBE)) {
-                    fprintf(stdout, "found solution at depth %d\n", i);
                     free(node.cube);
-
-                    fprintf(stdout, "traversed %u nodes\n", traversed);
-                    fprintf(stdout, "searched %u nodes\n", searched);
-                    fprintf(stdout, "pruned %u nodes\n", pruned);
-
                     return;
                 }
             } else {
@@ -86,7 +68,7 @@ void solve(struct cube *cube, int *n_turns) {
 
                     struct cube *adj_cube = init_cube_copy(node.cube);
                     turn(adj_cube, j);
-                    *(stack_pointer++) = (struct stack_node){ adj_cube, NULL, j, node.depth + 1 };
+                    stack[stack_index++] = (struct stack_node){ adj_cube, NULL, j, node.depth + 1 };
                 }
             }
 
