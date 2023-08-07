@@ -44,13 +44,13 @@ void solve(struct cube *cube, int *n_turns) {
     struct stack_node stack[360];
     uint8_t stack_index = 0;
 
-    for (int i = 0; i <= GODS_NUMBER; ++i) {
+    for (int depth = 0; depth <= GODS_NUMBER; ++depth) {
         struct cube *start = init_cube_copy(cube);
         stack[stack_index++] = (struct stack_node){ start, NULL, 255, 0 };
         while (stack_pointer != 0) {
             struct stack_node node = stack[--stack_index];
 
-            if (node.depth + heuristic(node.cube) > i) {
+            if (node.depth + heuristic(node.cube) > depth) {
                 free(node.cube);
                 continue;
             }
