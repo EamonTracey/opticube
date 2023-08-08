@@ -30,8 +30,8 @@ uint8_t str_to_turn(char *str) {
     }
 
     switch (*(str + 1)) {
-    case '\0':
     case ' ':
+    case '\0':
         return turn;
     case '2':
         return turn + 1;
@@ -43,7 +43,8 @@ uint8_t str_to_turn(char *str) {
 }
 
 struct algorithm str_to_algorithm(char *str) {
-    struct algorithm algorithm = (struct algorithm){ (uint8_t *)malloc(20 * sizeof(uint8_t)), 0 };
+    uint16_t turns_allocated = 20;
+    struct algorithm algorithm = (struct algorithm){ (uint8_t *)malloc(turns_allocated * sizeof(uint8_t)), 0 };
 
     uint8_t turn;
     while (1) {
@@ -54,6 +55,10 @@ struct algorithm str_to_algorithm(char *str) {
           return algorithm;
         }
 
+        if (turns_allocated == algorithm.n_turns) {
+            turns_allocated += 20;
+            algorithm.turns = (uint8_t *)realloc(algorithm.turns, turns_allocated * sizeof(uint8_t));
+        }
         algorithm.turns[algorithm.n_turns++] = turn;
 
         if (turn % 3 == 0) {
@@ -124,6 +129,7 @@ char *algorithm_to_str(struct algorithm algorithm) {
         if (i > 0)
             strcat(str, " ");
         strcat(str, turn);
+        free(turn);
     }
 
     return str;
