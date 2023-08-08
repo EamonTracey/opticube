@@ -47,7 +47,7 @@ void solve(struct cube *cube, int *n_turns) {
     for (int depth = 0; depth <= GODS_NUMBER; ++depth) {
         struct cube *start = init_cube_copy(cube);
         stack[stack_index++] = (struct stack_node){ start, NULL, 255, 0 };
-        while (stack_pointer != 0) {
+        while (stack_index != 0) {
             struct stack_node node = stack[--stack_index];
 
             if (node.depth + heuristic(node.cube) > depth) {
@@ -55,7 +55,7 @@ void solve(struct cube *cube, int *n_turns) {
                 continue;
             }
             
-            if (node.depth == i) {
+            if (node.depth == depth) {
                 if (cubes_equal(*node.cube, SOLVED_CUBE)) {
                     free(node.cube);
                     return;
