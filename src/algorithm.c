@@ -71,9 +71,60 @@ struct algorithm str_to_algorithm(char *str) {
 }
 
 char *turn_to_str(uint8_t turn) {
-    return "";
+    char *str = (char *)malloc(3 * sizeof(char));
+
+    switch (turn / 3) {
+    case 0:
+        *str = 'U';
+        break;
+    case 1:
+        *str = 'D';
+        break;
+    case 2:
+        *str = 'R';
+        break;
+    case 3:
+        *str = 'L';
+        break;
+    case 4:
+        *str = 'F';
+        break;
+    case 5:
+        *str = 'B';
+        break;
+    default:
+        return NULL;
+    }
+
+    switch (turn % 3) {
+    case 0:
+        *(str + 1) = '\0';
+        break;
+    case 1:
+        *(str + 1) = '2';
+        *(str + 2) = '\0';
+        break;
+    case 2:
+        *(str + 1) = '\'';
+        *(str + 2) = '\0';
+        break;
+    }
+
+    return str;
 }
 
 char *algorithm_to_str(struct algorithm algorithm) {
-    return "";
+    char *str = malloc(3 * algorithm.n_turns * sizeof(char));
+
+    char *turn;
+    for (int i = 0; i < algorithm.n_turns; ++i) {
+        turn = turn_to_str(algorithm.turns[i]);
+        if (turn == NULL)
+            return NULL;
+        if (i > 0)
+            strcat(str, " ");
+        strcat(str, turn);
+    }
+
+    return str;
 }
