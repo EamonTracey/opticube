@@ -3,15 +3,10 @@
 
 #include <stdint.h>
 
-struct algorithm {
-    uint8_t *turns;
-    uint16_t n_turns;
-};
-
 uint8_t str_to_turn(char *);
-struct algorithm str_to_algorithm(char *);
+uint8_t *str_to_algorithm(char *, uint16_t *);
 
 char *turn_to_str(uint8_t);
-char *algorithm_to_str(struct algorithm);
+char *algorithm_to_str(uint8_t *, uint16_t);
 
 #endif

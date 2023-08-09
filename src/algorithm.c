@@ -42,24 +42,24 @@ uint8_t str_to_turn(char *str) {
     }
 }
 
-struct algorithm str_to_algorithm(char *str) {
+uint8_t *str_to_algorithm(char *str, uint16_t *n_turns) {
     uint16_t turns_allocated = 20;
-    struct algorithm algorithm = (struct algorithm){ (uint8_t *)malloc(turns_allocated * sizeof(uint8_t)), 0 };
+    uint8_t *turns = (uint8_t *)malloc(turns_allocated * sizeof(uint8_t));
+    *n_turns = 0;
 
     uint8_t turn;
     while (1) {
         turn = str_to_turn(str);
         if (turn == 255) {
-          free(algorithm.turns);
-          algorithm.turns = NULL;
-          return algorithm;
+          free(turns);
+          return NULL;
         }
 
-        if (turns_allocated == algorithm.n_turns) {
+        if (turns_allocated == *n_turns) {
             turns_allocated += 20;
-            algorithm.turns = (uint8_t *)realloc(algorithm.turns, turns_allocated * sizeof(uint8_t));
+            turns = (uint8_t *)realloc(turns, turns_allocated * sizeof(uint8_t));
         }
-        algorithm.turns[algorithm.n_turns++] = turn;
+        turns[(*n_turns)++] = turn;
 
         if (turn % 3 == 0) {
             if (*(str + 1) == '\0')
@@ -72,7 +72,7 @@ struct algorithm str_to_algorithm(char *str) {
         }
     }
 
-    return algorithm;
+    return turns;
 }
 
 char *turn_to_str(uint8_t turn) {
@@ -118,14 +118,16 @@ char *turn_to_str(uint8_t turn) {
     return str;
 }
 
-char *algorithm_to_str(struct algorithm algorithm) {
-    char *str = malloc(3 * algorithm.n_turns * sizeof(char));
+char *algorithm_to_str(uint8_t *turns, uint16_t n_turns) {
+    char *str = malloc(3 * n_turns * sizeof(char));
 
     char *turn;
-    for (int i = 0; i < algorithm.n_turns; ++i) {
-        turn = turn_to_str(algorithm.turns[i]);
-        if (turn == NULL)
+    for (int i = 0; i < n_turns; ++i) {
+        turn = turn_to_str(turns[i]);
+        if (turn == NULL) {
+            free(str);
             return NULL;
+        }
         if (i > 0)
             strcat(str, " ");
         strcat(str, turn);
