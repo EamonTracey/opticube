@@ -67,9 +67,9 @@ uint8_t *solve(struct cube *cube, uint16_t *n_turns) {
     if (!tables_loaded)
         load_depth_tables();
 
-    struct stack_node stack[360];
+    struct stack_node stack[GODS_NUMBER * 18];
     uint16_t stack_index = 0;
-    uint8_t turns[20];
+    uint8_t *path = (uint8_t *)malloc((GODS_NUMBER + 1) * sizeof(uint8_t));
 
     uint8_t depth;
     for (depth = heuristic(cube); depth <= GODS_NUMBER; ++depth) {
@@ -77,7 +77,7 @@ uint8_t *solve(struct cube *cube, uint16_t *n_turns) {
         stack[stack_index++] = (struct stack_node){ start, 255, 0 };
         while (stack_index != 0) {
             struct stack_node node = stack[--stack_index];
-            turns[node.depth] = node.turn;
+            path[node.depth] = node.turn;
 
             if (node.depth + heuristic(node.cube) > depth) {
                 free(node.cube);
@@ -90,7 +90,7 @@ uint8_t *solve(struct cube *cube, uint16_t *n_turns) {
                     goto solved;
                 }
             } else {
-                uint8_t prev_layer = node.depth > 0 ? turns[node.depth - 1] / 3 : 255;
+                uint8_t prev_layer = node.depth > 0 ? path[node.depth - 1] / 3 : 255;
                 uint8_t prev_axis = prev_layer / 2;
                 uint8_t layer = node.turn / 3;
                 uint8_t axis = layer / 2;
@@ -111,10 +111,9 @@ uint8_t *solve(struct cube *cube, uint16_t *n_turns) {
 
 solved:
     *n_turns = depth;
-    uint8_t *solution = (uint8_t *)malloc(*n_turns * sizeof(uint8_t));
     for (uint8_t i = 1; i <= *n_turns; ++i) {
-        solution[i - 1] = turns[i];
+        path[i - 1] = path[i];
     }
 
-    return solution;
+    return path;
 }
