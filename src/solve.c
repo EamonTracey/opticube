@@ -1,3 +1,4 @@
+#include <dirent.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,16 +10,31 @@
 
 #define GODS_NUMBER 20
 
-static uint8_t TABLES_LOADED = 0;
-static uint8_t *corners_dt = NULL;
-static uint8_t *first_six_edges_dt = NULL;
-static uint8_t *second_six_edges_dt = NULL;
-
 void load_depth_tables() {
-    corners_dt = read_depth_table("corners.dt", 88179840);
-    first_six_edges_dt = read_depth_table("first_six_edges.dt", 42577920);
-    second_six_edges_dt = read_depth_table("second_six_edges.dt", 42577920);
-    TABLES_LOADED = 1;
+    DIR *depths_dir;
+    if ((depths_dir = opendir("depths")) == NULL) {
+        write_depth_table(
+            CORNERS_DT_PATH,
+            generate_depth_table(corners_state, CORNERS_DT_SIZE),
+            CORNERS_DT_SIZE
+        );
+        write_depth_table(
+            SIX_EDGES_A_DT_PATH,
+            generate_depth_table(six_edges_a_state, SIX_EDGES_A_DT_SIZE),
+            SIX_EDGES_A_DT_SIZE
+        );
+        write_depth_table(
+            SIX_EDGES_B_DT_PATH,
+            generate_depth_table(six_edges_b_state, SIX_EDGES_B_DT_SIZE),
+            SIX_EDGES_B_DT_SIZE
+        );
+    } else
+        closedir(depths_dir);
+
+    corners_dt = read_depth_table(CORNERS_DT_PATH, CORNERS_DT_SIZE);
+    six_edges_a_dt = read_depth_table(SIX_EDGES_A_DT_PATH, SIX_EDGES_A_DT_SIZE);
+    six_edges_b_dt = read_depth_table(SIX_EDGES_B_DT_PATH, SIX_EDGES_B_DT_SIZE);
+    tables_loaded = 1;
 }
 
 uint8_t heuristic(struct cube *cube) {
@@ -27,19 +43,28 @@ uint8_t heuristic(struct cube *cube) {
     uint8_t corners_depth = corners_dt[corners_state(cube)];
     max_depth = corners_depth;
 
-    uint8_t first_six_edges_depth = first_six_edges_dt[first_six_edges_state(cube)];
-    if (first_six_edges_depth > max_depth)
-        max_depth = first_six_edges_depth;
+    uint8_t six_edges_a_depth = six_edges_a_dt[six_edges_a_state(cube)];
+    if (six_edges_a_depth > max_depth)
+        max_depth = six_edges_a_depth;
 
-    uint8_t second_six_edges_depth = second_six_edges_dt[second_six_edges_state(cube)];
-    if (second_six_edges_depth > max_depth)
-        max_depth = second_six_edges_depth;
+    uint8_t six_edges_b_depth = six_edges_b_dt[six_edges_b_state(cube)];
+    if (six_edges_b_depth > max_depth)
+        max_depth = six_edges_b_depth;
 
     return max_depth;
 }
 
 uint8_t *solve(struct cube *cube, uint16_t *n_turns) {
-    if (!TABLES_LOADED)
+    if (cube == NULL) {
+        if (tables_loaded) {
+            free(corners_dt);
+            free(six_edges_a_dt);
+            free(six_edges_b_dt);
+        }
+        return NULL;
+    }
+
+    if (!tables_loaded)
         load_depth_tables();
 
     struct stack_node stack[360];

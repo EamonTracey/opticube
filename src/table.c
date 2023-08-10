@@ -52,7 +52,7 @@ uint8_t *generate_depth_table(uint32_t (*compute_state)(struct cube *), uint32_t
     return depth_table;
 }
 
-void write_depth_table(char *filename, uint8_t *table, uint32_t size) {
+void write_depth_table(const char *filename, uint8_t *table, uint32_t size) {
     FILE *fp = fopen(filename, "w");
 
     uint8_t buffer;
@@ -64,7 +64,7 @@ void write_depth_table(char *filename, uint8_t *table, uint32_t size) {
     fclose(fp);
 }
 
-uint8_t *read_depth_table(char *filename, uint32_t size) {
+uint8_t *read_depth_table(const char *filename, uint32_t size) {
     FILE *fp = fopen(filename, "r");
 
     uint8_t *table = malloc(size * sizeof(uint8_t));

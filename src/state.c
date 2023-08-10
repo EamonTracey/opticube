@@ -140,7 +140,7 @@ const uint32_t corner_o_radix[] = { 1, 3, 9, 27, 81, 243, 729 };
 const uint32_t edge_p6_radix[] = { 55440, 5040, 504, 56, 7, 1 };
 const uint32_t corner_p8_radix[] = { 5040, 720, 120, 24, 6, 2, 1 };
 
-uint32_t first_six_edges_state(struct cube *cube) {
+uint32_t six_edges_a_state(struct cube *cube) {
     uint32_t orientation = 0;
     uint32_t permutation = 0;
 
@@ -164,7 +164,7 @@ uint32_t first_six_edges_state(struct cube *cube) {
     return orientation + permutation * 64;
 }
 
-uint32_t second_six_edges_state(struct cube *cube) {
+uint32_t six_edges_b_state(struct cube *cube) {
     uint32_t orientation = 0;
     uint32_t permutation = 0;
 
