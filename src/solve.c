@@ -13,8 +13,8 @@
 
 void load_depth_tables() {
     DIR *depths_dir;
-    if ((depths_dir = opendir("depths")) == NULL) {
-        mkdir("depths", S_IRWXU | S_IRWXG | S_IRWXO);
+    if ((depths_dir = opendir(DEPTHS_PATH)) == NULL) {
+        mkdir(DEPTHS_PATH, S_IRWXU | S_IRWXG | S_IRWXO);
         write_depth_table(
             CORNERS_DT_PATH,
             generate_depth_table(corners_state, CORNERS_DT_SIZE),
