@@ -90,10 +90,10 @@ void turn_down_cw(struct cube *cube) {
     cube->edges[7] = stored_edge;
 
     struct corner stored_corner = cube->corners[4];
-    cube->corners[4] = cube->corners[5];
-    cube->corners[5] = cube->corners[7];
-    cube->corners[7] = cube->corners[6];
-    cube->corners[6] = stored_corner;
+    cube->corners[4] = cube->corners[6];
+    cube->corners[6] = cube->corners[7];
+    cube->corners[7] = cube->corners[5];
+    cube->corners[5] = stored_corner;
 }
 
 void turn_down_half(struct cube *cube) {
@@ -120,10 +120,10 @@ void turn_down_ccw(struct cube *cube) {
     cube->edges[6] = stored_edge;
 
     struct corner stored_corner = cube->corners[4];
-    cube->corners[4] = cube->corners[6];
-    cube->corners[6] = cube->corners[7];
-    cube->corners[7] = cube->corners[5];
-    cube->corners[5] = stored_corner;
+    cube->corners[4] = cube->corners[5];
+    cube->corners[5] = cube->corners[7];
+    cube->corners[7] = cube->corners[6];
+    cube->corners[6] = stored_corner;
 }
 
 void turn_right_cw(struct cube *cube) {
