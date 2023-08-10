@@ -25,7 +25,7 @@ static uint8_t *six_edges_b_dt = NULL;
 
 void load_depth_tables();
 
-uint8_t heuristic(struct cube *);
-uint8_t *solve(struct cube *, uint16_t *);
+uint8_t heuristic(const struct cube *);
+uint8_t *solve(const struct cube *, uint16_t *);
 
 #endif

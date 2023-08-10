@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 
 #include "cube.h"
 #include "solve.h"
@@ -13,6 +14,7 @@
 void load_depth_tables() {
     DIR *depths_dir;
     if ((depths_dir = opendir("depths")) == NULL) {
+        mkdir("depths", S_IRWXU | S_IRWXG | S_IRWXO);
         write_depth_table(
             CORNERS_DT_PATH,
             generate_depth_table(corners_state, CORNERS_DT_SIZE),
@@ -37,7 +39,7 @@ void load_depth_tables() {
     tables_loaded = 1;
 }
 
-uint8_t heuristic(struct cube *cube) {
+uint8_t heuristic(const struct cube *cube) {
     uint8_t max_depth;
 
     uint8_t corners_depth = corners_dt[corners_state(cube)];
@@ -54,7 +56,7 @@ uint8_t heuristic(struct cube *cube) {
     return max_depth;
 }
 
-uint8_t *solve(struct cube *cube, uint16_t *n_turns) {
+uint8_t *solve(const struct cube *cube, uint16_t *n_turns) {
     if (cube == NULL) {
         if (tables_loaded) {
             free(corners_dt);
@@ -85,7 +87,7 @@ uint8_t *solve(struct cube *cube, uint16_t *n_turns) {
             }
             
             if (node.depth == depth) {
-                if (cubes_equal(*node.cube, SOLVED_CUBE)) {
+                if (cubes_equal(node.cube, &SOLVED_CUBE)) {
                     free(node.cube);
                     goto solved;
                 }

@@ -35,5 +35,7 @@ int main(int argc, char *argv[]) {
     fprintf(stdout, "Solution in %d turns.\n", n_turns);
     fprintf(stdout, "Solution: %s\n", algorithm_to_str(solution, n_turns));
 
+    solve(NULL, NULL);
+
     return EXIT_SUCCESS;
 }

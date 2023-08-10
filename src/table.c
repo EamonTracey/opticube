@@ -8,7 +8,7 @@
 #include "state.h"
 #include "table.h"
 
-uint8_t *generate_depth_table(uint32_t (*compute_state)(struct cube *), uint32_t size) {
+uint8_t *generate_depth_table(uint32_t (*compute_state)(const struct cube *), uint32_t size) {
     struct cube *cube_solved = init_cube_solved();
     struct queue *queue = init_queue();
     struct queue_value value = (struct queue_value){ cube_solved, (*compute_state)(cube_solved), 255, 0 };
@@ -52,7 +52,7 @@ uint8_t *generate_depth_table(uint32_t (*compute_state)(struct cube *), uint32_t
     return depth_table;
 }
 
-void write_depth_table(const char *filename, uint8_t *table, uint32_t size) {
+void write_depth_table(const char *filename, const uint8_t *table, uint32_t size) {
     FILE *fp = fopen(filename, "w");
 
     uint8_t buffer;

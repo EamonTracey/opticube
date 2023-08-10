@@ -4,7 +4,7 @@
 
 #include "algorithm.h"
 
-uint8_t str_to_turn(char *str) {
+uint8_t str_to_turn(const char *str) {
     uint8_t turn;
 
     switch (*str) {
@@ -43,7 +43,7 @@ uint8_t str_to_turn(char *str) {
     }
 }
 
-uint8_t *str_to_algorithm(char *str, uint16_t *n_turns) {
+uint8_t *str_to_algorithm(const char *str, uint16_t *n_turns) {
     uint16_t turns_allocated = 20;
     uint8_t *turns = (uint8_t *)malloc(turns_allocated * sizeof(uint8_t));
     *n_turns = 0;
@@ -119,7 +119,7 @@ char *turn_to_str(uint8_t turn) {
     return str;
 }
 
-char *algorithm_to_str(uint8_t *turns, uint16_t n_turns) {
+char *algorithm_to_str(const uint8_t *turns, uint16_t n_turns) {
     char *str = malloc(3 * n_turns * sizeof(char));
 
     char *turn;

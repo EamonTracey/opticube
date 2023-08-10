@@ -24,8 +24,8 @@ static const struct cube SOLVED_CUBE = (struct cube){
 };
 
 struct cube *init_cube_solved();
-struct cube *init_cube_copy(struct cube *);
-uint8_t cubes_equal(struct cube, struct cube);
+struct cube *init_cube_copy(const struct cube *);
+uint8_t cubes_equal(const struct cube *, const struct cube *);
 
 void turn(struct cube *, uint8_t);
 
