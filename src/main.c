@@ -1,20 +1,39 @@
+#include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 
+#include "algorithm.h"
+#include "cube.h"
+#include "solve.h"
 #include "state.h"
 #include "table.h"
 
-int main() {
-    uint8_t *corners_dt = generate_depth_table(&corners_state, 88189740);
-    write_depth_table("corners.dt", corners_dt, 88189740);
-    free(corners_dt);
+int main(int argc, char *argv[]) {
+    if (argc == 1) {
+        fprintf(stderr, "ERROR: Must input a scramble.\n");
+        return EXIT_FAILURE;
+    }
 
-    uint8_t *first_six_edges_dt = generate_depth_table(&first_six_edges_state, 42577920);
-    write_depth_table("first_six_edges.dt", first_six_edges_dt, 42577920);
-    free(first_six_edges_dt);
+    if (argc > 2) {
+        fprintf(stderr, "ERROR: Too many input arguments.\n");
+        return EXIT_FAILURE;
+    }
 
-    uint8_t *second_six_edges_dt = generate_depth_table(&second_six_edges_state, 42577920);
-    write_depth_table("second_six_edges.dt", second_six_edges_dt, 42577920);
-    free(second_six_edges_dt);
+    uint8_t *scramble;
+    uint16_t n_turns;
+    if ((scramble = str_to_algorithm(argv[1], &n_turns)) == NULL) {
+        fprintf(stderr, "ERROR: Unable to parse scramble.\n");
+        return EXIT_FAILURE;
+    }
 
-    return 0;
+    struct cube *cube = init_cube_solved();
+    for (uint16_t i = 0; i < n_turns; ++i)
+        turn(cube, scramble[i]);
+    free(scramble);
+
+    uint8_t *solution = solve(cube, &n_turns);
+    fprintf(stdout, "Solution in %d turns.\n", n_turns);
+    fprintf(stdout, "Solution: %s\n", algorithm_to_str(solution, n_turns));
+
+    return EXIT_SUCCESS;
 }

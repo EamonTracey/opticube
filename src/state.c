@@ -1,5 +1,6 @@
 #include <stdint.h>
 
+#include "cube.h"
 #include "state.h"
 
 const uint8_t bit_count[] = {

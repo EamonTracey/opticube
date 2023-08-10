@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -5,6 +6,8 @@
 #include "solve.h"
 #include "state.h"
 #include "table.h"
+
+#include <stdio.h>
 
 #define GODS_NUMBER 20
 
@@ -37,18 +40,23 @@ uint8_t heuristic(struct cube *cube) {
     return max_depth;
 }
 
-void solve(struct cube *cube, int *n_turns) {
+uint8_t *solve(struct cube *cube, uint16_t *n_turns) {
     if (!TABLES_LOADED)
         load_depth_tables();
 
     struct stack_node stack[360];
-    uint8_t stack_index = 0;
+    uint16_t stack_index = 0;
+    uint8_t turns[20];
 
-    for (int depth = 0; depth <= GODS_NUMBER; ++depth) {
+    uint8_t depth;
+    for (depth = heuristic(cube); depth <= GODS_NUMBER; ++depth) {
+        fprintf(stdout, "searching depth %d\n", depth);
+
         struct cube *start = init_cube_copy(cube);
-        stack[stack_index++] = (struct stack_node){ start, NULL, 255, 0 };
+        stack[stack_index++] = (struct stack_node){ start, 255, 0 };
         while (stack_index != 0) {
             struct stack_node node = stack[--stack_index];
+            turns[node.depth] = node.turn;
 
             if (node.depth + heuristic(node.cube) > depth) {
                 free(node.cube);
@@ -58,7 +66,7 @@ void solve(struct cube *cube, int *n_turns) {
             if (node.depth == depth) {
                 if (cubes_equal(*node.cube, SOLVED_CUBE)) {
                     free(node.cube);
-                    return;
+                    goto solved;
                 }
             } else {
                 uint8_t layer = node.turn / 3;
@@ -68,11 +76,20 @@ void solve(struct cube *cube, int *n_turns) {
 
                     struct cube *adj_cube = init_cube_copy(node.cube);
                     turn(adj_cube, j);
-                    stack[stack_index++] = (struct stack_node){ adj_cube, NULL, j, node.depth + 1 };
+                    stack[stack_index++] = (struct stack_node){ adj_cube, j, node.depth + 1 };
                 }
             }
 
             free(node.cube);
         }
     }
+
+solved:
+    *n_turns = depth;
+    uint8_t *solution = (uint8_t *)malloc(*n_turns * sizeof(uint8_t));
+    for (uint8_t i = 1; i <= *n_turns; ++i) {
+        solution[i - 1] = turns[i];
+    }
+
+    return solution;
 }
