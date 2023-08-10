@@ -12,6 +12,7 @@ opticube:
 		src/table.c \
 		-o opticube
 
+.PHONY: clean
 clean:
-	rm -f depths
+	rm -fr depths
 	rm -f opticube
