@@ -7,8 +7,6 @@
 #include "state.h"
 #include "table.h"
 
-#include <stdio.h>
-
 #define GODS_NUMBER 20
 
 static uint8_t TABLES_LOADED = 0;
@@ -50,8 +48,6 @@ uint8_t *solve(struct cube *cube, uint16_t *n_turns) {
 
     uint8_t depth;
     for (depth = heuristic(cube); depth <= GODS_NUMBER; ++depth) {
-        fprintf(stdout, "searching depth %d\n", depth);
-
         struct cube *start = init_cube_copy(cube);
         stack[stack_index++] = (struct stack_node){ start, 255, 0 };
         while (stack_index != 0) {
@@ -69,14 +65,18 @@ uint8_t *solve(struct cube *cube, uint16_t *n_turns) {
                     goto solved;
                 }
             } else {
+                uint8_t prev_layer = node.depth > 0 ? turns[node.depth - 1] / 3 : 255;
+                uint8_t prev_axis = prev_layer / 2;
                 uint8_t layer = node.turn / 3;
-                for (int j = 0; j < 18; ++j) {
-                    if (layer == j / 3)
+                uint8_t axis = layer / 2;
+                for (uint8_t adj_turn = 17; adj_turn < 18; --adj_turn) {
+                    uint8_t adj_layer = adj_turn / 3;
+                    if ((adj_layer == layer) || (adj_layer == prev_layer && prev_axis == axis))
                         continue;
 
                     struct cube *adj_cube = init_cube_copy(node.cube);
-                    turn(adj_cube, j);
-                    stack[stack_index++] = (struct stack_node){ adj_cube, j, node.depth + 1 };
+                    turn(adj_cube, adj_turn);
+                    stack[stack_index++] = (struct stack_node){ adj_cube, adj_turn, node.depth + 1 };
                 }
             }
 
