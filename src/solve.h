@@ -6,12 +6,12 @@
 #include "cube.h"
 
 struct stack_node {
-    struct cube *cube;
+    struct cube cube;
     uint8_t turn;
     uint8_t depth;
 };
 
-static const char *DEPTHS_PATH;
+static const char *DEPTHS_PATH = "depths";
 static const char *CORNERS_DT_PATH = "depths/corners.dt";
 static const char *SIX_EDGES_A_DT_PATH = "depths/six_edges_a.dt";
 static const char *SIX_EDGES_B_DT_PATH = "depths/six_edges_b.dt";

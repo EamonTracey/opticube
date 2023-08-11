@@ -1,5 +1,6 @@
 #include <dirent.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
@@ -75,39 +76,29 @@ uint8_t *solve(const struct cube *cube, uint16_t *n_turns) {
 
     uint8_t depth;
     for (depth = heuristic(cube); depth <= GODS_NUMBER; ++depth) {
-        struct cube *start = init_cube_copy(cube);
-        stack[stack_index++] = (struct stack_node){ start, 255, 0 };
+        stack[stack_index++] = (struct stack_node){ *cube, 255, 0 };
         while (stack_index != 0) {
             struct stack_node node = stack[--stack_index];
             path[node.depth] = node.turn;
 
-            if (node.depth + heuristic(node.cube) > depth) {
-                free(node.cube);
+            if (node.depth + heuristic(&node.cube) > depth)
                 continue;
-            }
             
             if (node.depth == depth) {
-                if (cubes_equal(node.cube, &SOLVED_CUBE)) {
-                    free(node.cube);
+                if (cubes_equal(&node.cube, &SOLVED_CUBE))
                     goto solved;
-                }
             } else {
-                uint8_t prev_layer = node.depth > 0 ? path[node.depth - 1] / 3 : 255;
-                uint8_t prev_axis = prev_layer / 2;
                 uint8_t layer = node.turn / 3;
-                uint8_t axis = layer / 2;
                 for (uint8_t adj_turn = 17; adj_turn < 18; --adj_turn) {
                     uint8_t adj_layer = adj_turn / 3;
-                    if ((adj_layer == layer) || (adj_layer == prev_layer && prev_axis == axis))
+                    if ((adj_layer == layer) || (layer == 1 && adj_layer == 0) || (layer == 3 && adj_layer == 2) || (layer == 5 && adj_layer == 4))
                         continue;
 
-                    struct cube *adj_cube = init_cube_copy(node.cube);
-                    turn(adj_cube, adj_turn);
-                    stack[stack_index++] = (struct stack_node){ adj_cube, adj_turn, node.depth + 1 };
+                    stack[stack_index] = (struct stack_node){node.cube, adj_turn, node.depth + 1};
+                    turn(&stack[stack_index].cube, adj_turn);
+                    ++stack_index;
                 }
             }
-
-            free(node.cube);
         }
     }
 
