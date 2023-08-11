@@ -63,6 +63,7 @@ uint8_t *solve(const struct cube *cube, uint16_t *n_turns) {
             free(corners_dt);
             free(six_edges_a_dt);
             free(six_edges_b_dt);
+            tables_loaded = 0;
         }
         return NULL;
     }
