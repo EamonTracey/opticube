@@ -6,7 +6,7 @@
 struct queue_value {
     struct cube *cube;
     uint32_t state;
-    uint8_t last;
+    uint8_t turn;
     uint8_t depth;
 };
 

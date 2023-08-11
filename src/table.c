@@ -26,20 +26,19 @@ uint8_t *generate_depth_table(uint32_t (*compute_state)(const struct cube *), ui
         }
         depth_table[value.state] = value.depth;
 
-        uint8_t layer = value.last / 3;
-        uint8_t adj_depth = value.depth + 1;
-
-        for (int i = 0; i < 18; ++i) {
-            if (i / 3 == layer)
+        uint8_t layer = value.turn / 3;
+        for (uint8_t adj_turn = 17; adj_turn < 18; --adj_turn) {
+            uint8_t adj_layer = adj_turn / 3;
+            if ((adj_layer == layer) || (layer == 1 && adj_layer == 0) || (layer == 3 && adj_layer == 2) || (layer == 5 && adj_layer == 4))
                 continue;
 
             struct cube *adj_cube = init_cube_copy(value.cube);
-            turn(adj_cube, i);
+            turn(adj_cube, adj_turn);
             uint32_t adj_state = compute_state(adj_cube);
             if (depth_table[adj_state] != 255) {
                 free(adj_cube);
             } else {
-                struct queue_value adj_value = (struct queue_value){ adj_cube, adj_state, i, adj_depth };
+                struct queue_value adj_value = (struct queue_value){ adj_cube, adj_state, adj_turn, value.depth + 1 };
                 enqueue(queue, adj_value);
             }
         }
