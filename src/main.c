@@ -32,9 +32,13 @@ int main(int argc, char *argv[]) {
     free(scramble);
 
     uint8_t *solution = solve(cube, &n_turns);
+    char *solution_str = algorithm_to_str(solution, n_turns);
     fprintf(stdout, "Solution in %d turns.\n", n_turns);
-    fprintf(stdout, "Solution: %s\n", algorithm_to_str(solution, n_turns));
+    fprintf(stdout, "Solution: %s\n", solution_str);
 
+    free(cube);
+    free(solution);
+    free(solution_str);
     solve(NULL, NULL);
 
     return EXIT_SUCCESS;
