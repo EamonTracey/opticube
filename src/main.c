@@ -4,7 +4,7 @@
 
 #include "algorithm.h"
 #include "cube.h"
-#include "solve.h"
+#include "korf.h"
 #include "state.h"
 #include "table.h"
 
@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
         turn(cube, scramble[i]);
     free(scramble);
 
-    uint8_t *solution = solve(cube, &n_turns);
+    uint8_t *solution = korf_solve(cube, &n_turns);
     char *solution_str = algorithm_to_str(solution, n_turns);
     fprintf(stdout, "Solution in %d turns.\n", n_turns);
     fprintf(stdout, "Solution: %s\n", solution_str);
@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
     free(cube);
     free(solution);
     free(solution_str);
-    solve(NULL, NULL);
+    korf_solve(NULL, NULL);
 
     return EXIT_SUCCESS;
 }

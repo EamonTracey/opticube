@@ -1,5 +1,5 @@
-#ifndef SOLVE_H
-#define SOLVE_H
+#ifndef KORF_H
+#define KORF_H
 
 #include <stdint.h>
 
@@ -26,7 +26,7 @@ static uint8_t *six_edges_b_dt = NULL;
 
 void load_depth_tables();
 
-uint8_t heuristic(const struct cube *);
-uint8_t *solve(const struct cube *, uint16_t *);
+uint8_t korf_heuristic(const struct cube *);
+uint8_t *korf_solve(const struct cube *, uint16_t *);
 
 #endif

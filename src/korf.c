@@ -1,14 +1,16 @@
 #include <dirent.h>
 #include <stdint.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
 
+#include "algorithm.h"
 #include "cube.h"
-#include "solve.h"
+#include "korf.h"
 #include "state.h"
 #include "table.h"
+
+#include <stdio.h>
 
 #define GODS_NUMBER 20
 
@@ -40,7 +42,7 @@ void load_depth_tables() {
     tables_loaded = 1;
 }
 
-uint8_t heuristic(const struct cube *cube) {
+uint8_t korf_heuristic(const struct cube *cube) {
     uint8_t max_depth;
 
     uint8_t corners_depth = corners_dt[corners_state(cube)];
@@ -57,7 +59,7 @@ uint8_t heuristic(const struct cube *cube) {
     return max_depth;
 }
 
-uint8_t *solve(const struct cube *cube, uint16_t *n_turns) {
+uint8_t *korf_solve(const struct cube *cube, uint16_t *n_turns) {
     if (cube == NULL) {
         if (tables_loaded) {
             free(corners_dt);
@@ -76,18 +78,22 @@ uint8_t *solve(const struct cube *cube, uint16_t *n_turns) {
     uint8_t *path = (uint8_t *)malloc((GODS_NUMBER + 1) * sizeof(uint8_t));
 
     uint8_t depth;
-    for (depth = heuristic(cube); depth <= GODS_NUMBER; ++depth) {
+    for (depth = korf_heuristic(cube); depth <= GODS_NUMBER; ++depth) {
         stack[stack_index++] = (struct stack_node){ *cube, 255, 0 };
         while (stack_index != 0) {
             struct stack_node node = stack[--stack_index];
             path[node.depth] = node.turn;
 
-            if (node.depth + heuristic(&node.cube) > depth)
+            if (node.depth + korf_heuristic(&node.cube) > depth)
                 continue;
             
             if (node.depth == depth) {
-                if (cubes_equal(&node.cube, &SOLVED_CUBE))
-                    goto solved;
+                if (cubes_equal(&node.cube, &SOLVED_CUBE)) {
+                    char *solution = algorithm_to_str(path + 1, depth);
+                    fprintf(stdout, "Depth %d: %s\n", depth, solution);
+                    free(solution);
+                }
+                    //goto solved;
             } else {
                 uint8_t layer = node.turn / 3;
                 for (uint8_t adj_turn = 17; adj_turn < 18; --adj_turn) {
@@ -103,6 +109,7 @@ uint8_t *solve(const struct cube *cube, uint16_t *n_turns) {
         }
     }
 
+    goto solved;
 solved:
     *n_turns = depth;
     for (uint8_t i = 1; i <= *n_turns; ++i) {
