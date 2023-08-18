@@ -17,16 +17,9 @@ const char *CORNERS_DT_PATH = "depths/corners.dt";
 const char *SIX_EDGES_A_DT_PATH = "depths/six_edges_a.dt";
 const char *SIX_EDGES_B_DT_PATH = "depths/six_edges_b.dt";
 
-const uint32_t CORNERS_DT_SIZE = 88179840;
-const uint32_t SIX_EDGES_A_DT_SIZE = 42577920;
-const uint32_t SIX_EDGES_B_DT_SIZE = 42577920;
-
 uint8_t *corners_dt = NULL;
 uint8_t *six_edges_a_dt = NULL;
 uint8_t *six_edges_b_dt = NULL;
-
-void load_depth_tables() {
-}
 
 uint8_t korf_heuristic(const struct cube *cube) {
     uint8_t max_depth;
