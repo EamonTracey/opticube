@@ -91,11 +91,16 @@ uint32_t eo_equator_combination_state(const struct cube *cube) {
     uint32_t orientation = 0;
     uint32_t combination = 0;
 
-    for (int i = 0; i < 12; ++i) {
+    uint8_t r = 1;
+    for (int i = 0; i < 11; ++i) {
         orientation += cube->edges[i].orientation * edge_o_radix[i];
+        if (cube->edges[i].cubelet > 7)
+            combination += n_choose_r[cube->edges[i].cubelet][r++];
     }
+    if (r == 4)
+        combination += n_choose_r[cube->edges[11].cubelet][r];
 
-    return orientation + combination - combination;
+    return orientation + combination * 2048;
 }
 
 uint32_t six_edges_a_state(const struct cube *cube) {
