@@ -11,7 +11,6 @@ struct stack_node {
     uint8_t depth;
 };
 
-void load_depth_tables();
 uint8_t korf_heuristic(const struct cube *);
 uint8_t *korf_solve(const struct cube *, uint16_t *);
 

@@ -26,30 +26,6 @@ uint8_t *six_edges_a_dt = NULL;
 uint8_t *six_edges_b_dt = NULL;
 
 void load_depth_tables() {
-    DIR *depths_dir;
-    if ((depths_dir = opendir(DEPTHS_PATH)) == NULL) {
-        mkdir(DEPTHS_PATH, S_IRWXU | S_IRWXG | S_IRWXO);
-        write_depth_table(
-            CORNERS_DT_PATH,
-            generate_depth_table(corners_state, CORNERS_DT_SIZE),
-            CORNERS_DT_SIZE
-        );
-        write_depth_table(
-            SIX_EDGES_A_DT_PATH,
-            generate_depth_table(six_edges_a_state, SIX_EDGES_A_DT_SIZE),
-            SIX_EDGES_A_DT_SIZE
-        );
-        write_depth_table(
-            SIX_EDGES_B_DT_PATH,
-            generate_depth_table(six_edges_b_state, SIX_EDGES_B_DT_SIZE),
-            SIX_EDGES_B_DT_SIZE
-        );
-    } else
-        closedir(depths_dir);
-
-    corners_dt = read_depth_table(CORNERS_DT_PATH, CORNERS_DT_SIZE);
-    six_edges_a_dt = read_depth_table(SIX_EDGES_A_DT_PATH, SIX_EDGES_A_DT_SIZE);
-    six_edges_b_dt = read_depth_table(SIX_EDGES_B_DT_PATH, SIX_EDGES_B_DT_SIZE);
 }
 
 uint8_t korf_heuristic(const struct cube *cube) {
@@ -83,7 +59,9 @@ uint8_t *korf_solve(const struct cube *cube, uint16_t *n_turns) {
     }
 
     if (!tables_loaded) {
-        load_depth_tables();
+        corners_dt = read_depth_table(CORNERS_DT_PATH, CORNERS_DT_SIZE);
+        six_edges_a_dt = read_depth_table(SIX_EDGES_A_DT_PATH, SIX_EDGES_A_DT_SIZE);
+        six_edges_b_dt = read_depth_table(SIX_EDGES_B_DT_PATH, SIX_EDGES_B_DT_SIZE);
         tables_loaded = 1;
     }
 
