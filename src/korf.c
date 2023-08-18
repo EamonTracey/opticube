@@ -10,9 +10,20 @@
 #include "state.h"
 #include "table.h"
 
-#include <stdio.h>
-
 #define GODS_NUMBER 20
+
+const char *DEPTHS_PATH = "depths";
+const char *CORNERS_DT_PATH = "depths/corners.dt";
+const char *SIX_EDGES_A_DT_PATH = "depths/six_edges_a.dt";
+const char *SIX_EDGES_B_DT_PATH = "depths/six_edges_b.dt";
+
+const uint32_t CORNERS_DT_SIZE = 88179840;
+const uint32_t SIX_EDGES_A_DT_SIZE = 42577920;
+const uint32_t SIX_EDGES_B_DT_SIZE = 42577920;
+
+uint8_t *corners_dt = NULL;
+uint8_t *six_edges_a_dt = NULL;
+uint8_t *six_edges_b_dt = NULL;
 
 void load_depth_tables() {
     DIR *depths_dir;
@@ -39,7 +50,6 @@ void load_depth_tables() {
     corners_dt = read_depth_table(CORNERS_DT_PATH, CORNERS_DT_SIZE);
     six_edges_a_dt = read_depth_table(SIX_EDGES_A_DT_PATH, SIX_EDGES_A_DT_SIZE);
     six_edges_b_dt = read_depth_table(SIX_EDGES_B_DT_PATH, SIX_EDGES_B_DT_SIZE);
-    tables_loaded = 1;
 }
 
 uint8_t korf_heuristic(const struct cube *cube) {
@@ -60,6 +70,8 @@ uint8_t korf_heuristic(const struct cube *cube) {
 }
 
 uint8_t *korf_solve(const struct cube *cube, uint16_t *n_turns) {
+    static uint8_t tables_loaded = 0;
+
     if (cube == NULL) {
         if (tables_loaded) {
             free(corners_dt);
@@ -70,8 +82,10 @@ uint8_t *korf_solve(const struct cube *cube, uint16_t *n_turns) {
         return NULL;
     }
 
-    if (!tables_loaded)
+    if (!tables_loaded) {
         load_depth_tables();
+        tables_loaded = 1;
+    }
 
     struct stack_node stack[GODS_NUMBER * 18];
     uint16_t stack_index = 0;
@@ -79,7 +93,7 @@ uint8_t *korf_solve(const struct cube *cube, uint16_t *n_turns) {
 
     uint8_t depth;
     for (depth = korf_heuristic(cube); depth <= GODS_NUMBER; ++depth) {
-        stack[stack_index++] = (struct stack_node){ *cube, 255, 0 };
+        stack[stack_index++] = (struct stack_node){*cube, 255, 0};
         while (stack_index != 0) {
             struct stack_node node = stack[--stack_index];
             path[node.depth] = node.turn;
@@ -88,12 +102,8 @@ uint8_t *korf_solve(const struct cube *cube, uint16_t *n_turns) {
                 continue;
             
             if (node.depth == depth) {
-                if (cubes_equal(&node.cube, &SOLVED_CUBE)) {
-                    char *solution = algorithm_to_str(path + 1, depth);
-                    fprintf(stdout, "Depth %d: %s\n", depth, solution);
-                    free(solution);
-                }
-                    //goto solved;
+                if (cubes_equal(&node.cube, &SOLVED_CUBE))
+                    goto solved;
             } else {
                 uint8_t layer = node.turn / 3;
                 for (uint8_t adj_turn = 17; adj_turn < 18; --adj_turn) {
@@ -109,7 +119,6 @@ uint8_t *korf_solve(const struct cube *cube, uint16_t *n_turns) {
         }
     }
 
-    goto solved;
 solved:
     *n_turns = depth;
     for (uint8_t i = 1; i <= *n_turns; ++i) {

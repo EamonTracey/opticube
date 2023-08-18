@@ -6,7 +6,6 @@
 #include "cube.h"
 #include "korf.h"
 #include "state.h"
-#include "table.h"
 
 int main(int argc, char *argv[]) {
     if (argc == 1) {

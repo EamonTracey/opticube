@@ -11,7 +11,7 @@
 uint8_t *generate_depth_table(uint32_t (*compute_state)(const struct cube *), uint32_t size) {
     struct cube *cube_solved = init_cube_solved();
     struct queue *queue = init_queue();
-    struct queue_value value = (struct queue_value){ cube_solved, (*compute_state)(cube_solved), 255, 0 };
+    struct queue_value value = (struct queue_value){cube_solved, (*compute_state)(cube_solved), 255, 0};
 
     uint8_t *depth_table = (uint8_t *)malloc(size * sizeof(uint8_t));
     memset(depth_table, 255, size * sizeof(uint8_t));
@@ -38,7 +38,7 @@ uint8_t *generate_depth_table(uint32_t (*compute_state)(const struct cube *), ui
             if (depth_table[adj_state] != 255) {
                 free(adj_cube);
             } else {
-                struct queue_value adj_value = (struct queue_value){ adj_cube, adj_state, adj_turn, value.depth + 1 };
+                struct queue_value adj_value = (struct queue_value){adj_cube, adj_state, adj_turn, value.depth + 1};
                 enqueue(queue, adj_value);
             }
         }

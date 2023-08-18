@@ -3,7 +3,12 @@
 
 #include "cube.h"
 
-void (*turns[])(struct cube *) = {
+const struct cube SOLVED_CUBE = (const struct cube){
+    {{0, 0}, {1, 0}, {2, 0}, {3, 0}, {4, 0}, {5, 0}, {6, 0}, {7, 0}, {8, 0}, {9, 0}, {10, 0}, {11, 0}},
+    {{0, 0}, {1, 0}, {2, 0}, {3, 0}, {4, 0}, {5, 0}, {6, 0}, {7, 0}}
+};
+
+void (*turns[]) (struct cube *) = {
     turn_up_cw, turn_up_half, turn_up_ccw,
     turn_down_cw, turn_down_half, turn_down_ccw,
     turn_right_cw, turn_right_half, turn_right_ccw,
@@ -12,9 +17,9 @@ void (*turns[])(struct cube *) = {
     turn_back_cw, turn_back_half, turn_back_ccw,
 };
 
-const uint8_t edge_flip[] = { 1, 0 };
-const uint8_t corner_twist_cw[] = { 1, 2, 0 };
-const uint8_t corner_twist_ccw[] = { 2, 0, 1 };
+const uint8_t edge_flip[] = {1, 0};
+const uint8_t corner_twist_cw[] = {1, 2, 0};
+const uint8_t corner_twist_ccw[] = {2, 0, 1};
 
 struct cube *init_cube_solved() {
     struct cube *cube = (struct cube *)malloc(sizeof(struct cube));
