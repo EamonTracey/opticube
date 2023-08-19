@@ -12,7 +12,6 @@
 
 #define GODS_NUMBER 20
 
-const char *DEPTHS_PATH = "depths";
 const char *CORNERS_DT_PATH = "depths/corners.dt";
 const char *SIX_EDGES_A_DT_PATH = "depths/six_edges_a.dt";
 const char *SIX_EDGES_B_DT_PATH = "depths/six_edges_b.dt";
