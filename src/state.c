@@ -87,8 +87,8 @@ const uint16_t n_choose_r[12][5] = {
 
 const uint32_t eo_radix[] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
 const uint32_t co_radix[] = {1, 3, 9, 27, 81, 243, 729};
-
 const uint32_t ep6_radix[] = {55440, 5040, 504, 56, 7, 1};
+const uint32_t ep8_radix[] = {5040, 720, 120, 24, 6, 2, 1};
 const uint32_t cp8_radix[] = {5040, 720, 120, 24, 6, 2, 1};
 
 uint32_t eo_equator_combination_state(const struct cube *cube) {
@@ -120,6 +120,44 @@ uint32_t co_equator_combination_state(const struct cube *cube) {
             combination += n_choose_r[i][r++];
 
     return orientation + combination * 2187;
+}
+
+uint32_t ep_tetrads_combination_state(const struct cube *cube) {
+    uint32_t combination = 0;
+    uint32_t permutation = 0;
+
+    uint8_t r = 1;
+    for (uint8_t i = 0; r < 5 && i < 8; ++i)
+        if (cube->corners[i].cubelet < 4)
+            combination += n_choose_r[i][r++];
+
+    uint8_t visited = 0;
+    for (uint8_t i = 0; i < 7; ++i) {
+        uint8_t cubelet = cube->edges[i].cubelet;
+        visited |= 128 >> cubelet;
+        permutation += (cubelet - bit_count[(visited >> (8 - cubelet)) & 255]) * ep8_radix[i];
+    }
+
+    return combination + permutation * 70;
+}
+
+uint32_t cp_slices_combination_state(const struct cube *cube) {
+    uint32_t combination = 0;
+    uint32_t permutation = 0;
+
+    uint8_t r = 1;
+    for (uint8_t i = 0; r < 5 && i < 8; ++i)
+        if (cube->edges[i].cubelet < 4)
+            combination += n_choose_r[i][r++];
+
+    uint8_t visited = 0;
+    for (uint8_t i = 0; i < 7; ++i) {
+        uint8_t cubelet = cube->corners[i].cubelet;
+        visited |= 128 >> cubelet;
+        permutation += (cubelet - bit_count[(visited >> (8 - cubelet)) & 255]) * cp8_radix[i];
+    }
+
+    return combination + permutation * 70;
 }
 
 uint32_t six_edges_a_state(const struct cube *cube) {

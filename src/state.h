@@ -7,6 +7,8 @@
 
 uint32_t eo_equator_combination_state(const struct cube *);
 uint32_t co_equator_combination_state(const struct cube *);
+uint32_t ep_tetrads_combination_state(const struct cube *);
+uint32_t cp_slices_combination_state(const struct cube *);
 
 uint32_t six_edges_a_state(const struct cube *);
 uint32_t six_edges_b_state(const struct cube *);
