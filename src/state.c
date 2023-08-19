@@ -102,7 +102,7 @@ uint32_t eo_equator_combination_state(const struct cube *cube) {
             combination += n_choose_r[i][r++];
     }
     if (r == 4)
-        combination += n_choose_r[11][r];
+        combination += 330;
 
     return orientation + combination * 2048;
 }
