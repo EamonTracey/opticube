@@ -11,6 +11,7 @@ opticube:
 		src/stack.c \
 		src/state.c \
 		src/table.c \
+		src/twop.c \
 		-o opticube
 
 .PHONY: clean
