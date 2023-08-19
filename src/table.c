@@ -8,7 +8,7 @@
 #include "state.h"
 #include "table.h"
 
-uint8_t *generate_depth_table(uint32_t (*compute_state)(const struct cube *), uint32_t size) {
+uint8_t *generate_depth_table(uint32_t (*compute_state)(const struct cube *), uint32_t size, uint8_t *turns, uint8_t n_turns) {
     struct cube *cube_solved = init_cube_solved();
     struct queue *queue = init_queue();
     struct queue_value value = (struct queue_value){cube_solved, (*compute_state)(cube_solved), 255, 0};
@@ -27,7 +27,8 @@ uint8_t *generate_depth_table(uint32_t (*compute_state)(const struct cube *), ui
         depth_table[value.state] = value.depth;
 
         uint8_t layer = value.turn / 3;
-        for (uint8_t adj_turn = 17; adj_turn < 18; --adj_turn) {
+        for (uint8_t i = n_turns - 1; i < 18; --i) {
+            uint8_t adj_turn = turns[i];
             uint8_t adj_layer = adj_turn / 3;
             if ((adj_layer == layer) || (layer == 1 && adj_layer == 0) || (layer == 3 && adj_layer == 2) || (layer == 5 && adj_layer == 4))
                 continue;
