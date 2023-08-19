@@ -92,6 +92,8 @@ uint8_t *korf_solve(const struct cube *cube, uint16_t *n_turns) {
     }
 
 solved:
+    free_stack(stack);
+
     *n_turns = depth;
     for (uint8_t i = 1; i <= *n_turns; ++i) {
         path[i - 1] = path[i];

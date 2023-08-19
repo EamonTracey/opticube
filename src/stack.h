@@ -19,5 +19,6 @@ struct stack {
 struct stack *init_stack(uint16_t);
 void push(struct stack *, struct cube, uint8_t, uint8_t);
 struct stack_node pop(struct stack *);
+void free_stack(struct stack *);
 
 #endif

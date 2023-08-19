@@ -17,3 +17,8 @@ void push(struct stack *stack, struct cube cube, uint8_t turn, uint8_t depth) {
 struct stack_node pop(struct stack *stack) {
     return stack->nodes[--stack->index];
 }
+
+void free_stack(struct stack *stack) {
+    free(stack->nodes);
+    free(stack);
+}
