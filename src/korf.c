@@ -1,4 +1,3 @@
-#include <dirent.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,6 +6,7 @@
 #include "algorithm.h"
 #include "cube.h"
 #include "korf.h"
+#include "stack.h"
 #include "state.h"
 #include "table.h"
 
@@ -16,6 +16,9 @@ const char *DEPTHS_PATH = "depths";
 const char *CORNERS_DT_PATH = "depths/corners.dt";
 const char *SIX_EDGES_A_DT_PATH = "depths/six_edges_a.dt";
 const char *SIX_EDGES_B_DT_PATH = "depths/six_edges_b.dt";
+const uint32_t CORNERS_DT_SIZE = 88179840;
+const uint32_t SIX_EDGES_A_DT_SIZE = 42577920;
+const uint32_t SIX_EDGES_B_DT_SIZE = 42577920;
 
 uint8_t *corners_dt = NULL;
 uint8_t *six_edges_a_dt = NULL;
@@ -58,15 +61,14 @@ uint8_t *korf_solve(const struct cube *cube, uint16_t *n_turns) {
         tables_loaded = 1;
     }
 
-    struct stack_node stack[GODS_NUMBER * 18];
-    uint16_t stack_index = 0;
+    struct stack *stack = init_stack(GODS_NUMBER * 18);
     uint8_t *path = (uint8_t *)malloc((GODS_NUMBER + 1) * sizeof(uint8_t));
 
     uint8_t depth;
     for (depth = korf_heuristic(cube); depth <= GODS_NUMBER; ++depth) {
-        stack[stack_index++] = (struct stack_node){*cube, 255, 0};
-        while (stack_index != 0) {
-            struct stack_node node = stack[--stack_index];
+        push(stack, *cube, 255, 0);
+        while (stack->index != 0) {
+            struct stack_node node = pop(stack);
             path[node.depth] = node.turn;
 
             if (node.depth + korf_heuristic(&node.cube) > depth)
@@ -82,9 +84,9 @@ uint8_t *korf_solve(const struct cube *cube, uint16_t *n_turns) {
                     if ((adj_layer == layer) || (layer == 1 && adj_layer == 0) || (layer == 3 && adj_layer == 2) || (layer == 5 && adj_layer == 4))
                         continue;
 
-                    stack[stack_index] = (struct stack_node){node.cube, adj_turn, node.depth + 1};
-                    turn(&stack[stack_index].cube, adj_turn);
-                    ++stack_index;
+                    struct cube adj_cube = node.cube;
+                    turn(&adj_cube, adj_turn);
+                    push(stack, adj_cube, adj_turn, node.depth + 1);
                 }
             }
         }

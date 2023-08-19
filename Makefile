@@ -8,6 +8,7 @@ opticube:
 		src/main.c \
 		src/cube.c \
 		src/queue.c \
+		src/stack.c \
 		src/state.c \
 		src/table.c \
 		-o opticube
