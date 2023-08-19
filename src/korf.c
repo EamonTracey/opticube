@@ -1,9 +1,6 @@
 #include <stdint.h>
 #include <stdlib.h>
-#include <string.h>
-#include <sys/stat.h>
 
-#include "algorithm.h"
 #include "cube.h"
 #include "korf.h"
 #include "stack.h"
