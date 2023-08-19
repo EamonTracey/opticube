@@ -69,6 +69,8 @@ uint8_t *twop_solve(const struct cube *cube, uint16_t *n_turns) {
         if (tables_loaded) {
             free(eo_equator_combination_dt);
             free(co_equator_combination_dt);
+            free(ep_tetrads_combination_dt);
+            free(cp_slices_combination_dt);
             tables_loaded = 0;
         }
         return NULL;
